@@ -55,7 +55,7 @@ export default class App extends Component {
   };
 
   search() {
-    alert('searching');
+    alert('searching more ios');
   }
 
   render() {
