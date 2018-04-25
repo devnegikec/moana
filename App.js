@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TextInput, Button } from 'react-native';
+import { StyleSheet, View, TextInput, Button, FlatList, Text } from 'react-native';
 
 import { PlaceInput } from './src/components/PlaceInput';
 import { PlaceList } from './src/components/PlaceList';
@@ -7,8 +7,10 @@ import { PlaceDetail } from "./src/components/PlaceDetail";
 
 export default class App extends Component {
   state = {
+    currentUserName: '',
     places: [],
-    selectedPlace: null
+    selectedPlace: null,
+    users: [{name:'Dev'}, {name: 'subin'}]
   };
 
   placeAddedHandler = placeName => {
@@ -53,9 +55,24 @@ export default class App extends Component {
       };
     });
   };
+  userNameChangedHandler = val => {
+    this.setState({
+      currentUserName: val
+    });
+  };
 
-  search() {
-    alert('searching more ios');
+  addUser = () => {
+    // alert(event.target.value);
+    const name = this.state.currentUserName.trim();
+    if (name === '' ) {
+      return;
+    }
+    const users = this.state.users;
+    const newUsers = [...users, {name}];
+    this.setState({
+      currentUserName: '',
+      users: newUsers
+    });
   }
 
   render() {
@@ -63,19 +80,15 @@ export default class App extends Component {
       <View style={styles.container}>
         <TextInput 
         placeholder="An awesome place"
+        value={this.state.currentUserName}
+        onChangeText={this.userNameChangedHandler}
         style={styles.placeInput}
         />
-        <Button onPress={this.search} title="search" />
-        {/* <PlaceDetail
-          selectedPlace={this.state.selectedPlace}
-          onItemDeleted={this.placeDeletedHandler}
-          onModalClosed={this.modalClosedHandler}
+        <Button onPress={this.addUser} title="Add" />
+        <FlatList
+          data={this.state.users}
+          renderItem={({item}) => <Text>{item.name}</Text>}
         />
-        <PlaceInput onPlaceAdded={this.placeAddedHandler} />
-        <PlaceList
-          places={this.state.places}
-          onItemSelected={this.placeSelectedHandler}
-        /> */}
       </View>
     );
   }
